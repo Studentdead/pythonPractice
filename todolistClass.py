@@ -90,7 +90,7 @@ def main():
         while attempts < max_attempts:
             try:
                 i = int(input("Select a number to perform action\n"
-                              "1.Create new todolist\n"
+                              "1.Create new todolists\n"
                               "2.Use existing todolist\n"
                               "3.Exit\n"
 
