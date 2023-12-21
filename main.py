@@ -1,87 +1,7 @@
-import os
-
-directory_path = "/home/sugamdahal/PycharmProjects/pythonProject/folder/todos"
-class todos:
-    name = ""
-
-
-    def __init__(self, name):
-        self.name = name
-        self.todoList = None
-        try:
-            file = open(directory_path+f"/{name}.txt","r+")
-            self.todoList = file.readlines()
-            file.close()
-        except FileNotFoundError:
-            file = open(directory_path+f"/{name}.txt","w+")  # Open in write mode to create the file
-            self.todoList = file.readlines()
-            file.close()
-
-
-
-
-    def save(self):
-        with open(directory_path+f"/{self.name}.txt","w") as file:
-            file.writelines(self.todoList)
-
-
-    def add(self, value):
-        self.todoList.append(value+'\n')
-        self.save()
-
-    def show(self):
-        for index, value in enumerate(self.todoList, start=1):
-            print(f"{index}.{value}",end="")
-
-    def getTodo(self, num):
-        if (self.checkBounds(num)):
-            return self.todoList[num]
-
-    def checkBounds(self, num):
-        if num < len(self.todoList) and num >= 0:
-            return True
-        else:
-            print("Value out of bounds!!!Try again")
-            return False
-
-    def edit(self, num, value):
-        if self.checkBounds(num):
-            self.todoList[num] = value
-            self.save()
-
-    def delete(self, num):
-        if self.checkBounds(num):
-            del self.todoList[num]
-            self.save()
-
-    def markComplete(self, num):
-        if self.checkBounds(num):
-            self.todoList[num] = '[completed]' + self.todoList[num]
-            self.save()
-
-    def __str__(self):
-        return f"Todo list: {self.name}"
-
-#
-# class listTodos:
-#     lists=[]
-#     def create(self,name):
-#         self.lists.append(todos(name))
-#     def isEmpty(self):
-#         if len(lists)==0:
-#             return true
-#         else:
-#             return false
-#     def show(self):
-#         for obj in self.lists:
-#             printf(f"{obj.name}")
-#     def getTodo(self,name):
-#         for obj in self.lists:
-#             if name==obj.name:
-#                 return obj
+from Classes import todos, get_available_todos, directory_path
 def main():
     print("hello")
-    todo=os.listdir(directory_path)
+    todo=get_available_todos()
     new_todo=None
 
 
@@ -123,12 +43,11 @@ def main():
 
             else:
                 try:
-                    # Get the list of files and directories in the specified path
-                    contents = os.listdir(directory_path)
+
                     nameList=[]
 
                     # Print the contents
-                    for index, item in enumerate(contents, start=1):
+                    for index, item in enumerate(todo, start=1):
                         print(f"{index}.{item[:-4]}")
                         nameList.append(item[:-4])
 
@@ -206,3 +125,23 @@ def main():
 
 if __name__=="__main__":
     main()
+
+
+
+#
+# class listTodos:
+#     lists=[]
+#     def create(self,name):
+#         self.lists.append(todos(name))
+#     def isEmpty(self):
+#         if len(lists)==0:
+#             return true
+#         else:
+#             return false
+#     def show(self):
+#         for obj in self.lists:
+#             printf(f"{obj.name}")
+#     def getTodo(self,name):
+#         for obj in self.lists:
+#             if name==obj.name:
+#                 return obj
