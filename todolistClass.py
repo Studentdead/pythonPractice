@@ -20,14 +20,14 @@ class todos:
 
 
 
-    def __del__(self):
-        file=open(directory_path+f"/{self.name}.txt","w")
-        file.writelines(self.todoList)
-        file.close()
+    def save(self):
+        with open(directory_path+f"/{self.name}.txt","w") as file:
+            file.writelines(self.todoList)
 
 
     def add(self, value):
         self.todoList.append(value+'\n')
+        self.save()
 
     def show(self):
         for index, value in enumerate(self.todoList, start=1):
@@ -47,14 +47,17 @@ class todos:
     def edit(self, num, value):
         if self.checkBounds(num):
             self.todoList[num] = value
+            self.save()
 
     def delete(self, num):
         if self.checkBounds(num):
             del self.todoList[num]
+            self.save()
 
     def markComplete(self, num):
         if self.checkBounds(num):
             self.todoList[num] = '[completed]' + self.todoList[num]
+            self.save()
 
     def __str__(self):
         return f"Todo list: {self.name}"
@@ -122,10 +125,12 @@ def main():
                 try:
                     # Get the list of files and directories in the specified path
                     contents = os.listdir(directory_path)
+                    nameList=[]
 
                     # Print the contents
                     for index, item in enumerate(contents, start=1):
-                        print(f"{index}.{item.rstrip('.txt')}")
+                        print(f"{index}.{item[:-4]}")
+                        nameList.append(item[:-4])
 
                 except FileNotFoundError:
                     print(f"The specified directory '{directory_path}' does not exist.")
@@ -134,6 +139,11 @@ def main():
                 except Exception as e:
                     print(f"An error occurred: {str(e)}")
                 name=input("Select todo to use:\n")
+                if name not in nameList:
+                    x=input("No todoList {name} found. \n"
+                          "Press y to create todoList {name} or n to exit")
+                    if x =='n':
+                        continue
                 new_todo=todos(name)
 
 
@@ -161,8 +171,8 @@ def main():
                 case '3':
                     try:
                         num = int(input("Enter the number of todo to edit:")) - 1
-                        new_todo.edit(num, input("Enter updated value: "))
-                        break
+                        new_todo.edit(num, input("Enter updated value: ")+"\n")
+
                     except ValueError:
                         print("Wrong value inserted Back to menu!!")
 
@@ -171,7 +181,8 @@ def main():
                     try:
                         num = int(input("Enter the number of todo to delete:")) - 1
                         new_todo.delete(num)
-                        break
+
+
                     except ValueError:
                         print("Wrong value inserted Back to menu!!")
 
@@ -180,7 +191,7 @@ def main():
                     try:
                         num = int(input("Enter the number of todo to mark Complete:")) - 1
                         new_todo.markComplete(num)
-                        break
+
                     except ValueError:
                         print("Wrong value inserted Back to menu!!")
 
@@ -189,9 +200,7 @@ def main():
                     break
 
             con = input("Continue Y/N").lower()
-            if con == 'n':
-                del new_todo
-                break
+
 
 
 
